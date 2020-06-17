@@ -2,7 +2,7 @@
 
 Ansible role to install and update dotfiles using a bare Git repository.
 
-Automatises the technique described in [The best way to store your dotfiles: A bare Git repository](https://www.atlassian.com/git/tutorials/dotfiles):
+Automatises the technique described in [The best way to store your dotfiles: A bare Git repository](https://www.atlassian.com/git/tutorials/dotfiles).
 
 > The technique consists in storing a Git bare repository in a "side" folder (like $HOME/.cfg or $HOME/.myconfig) using a specially crafted alias so that commands are run against that repository and not the usual .git local folder, which would interfere with any other Git repositories around.
 
