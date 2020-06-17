@@ -1,0 +1,21 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+  - name: Include role default variables
+    include_vars:
+      file: ../../defaults/main.yml
+  - name: Check that alias can be used
+    shell: |
+      # Alias
+      shopt -s expand_aliases
+      alias {{ git_dotfiles_alias }}='git --git-dir={{ git_dotfiles_dir_dot_git }} --work-tree={{ git_dotfiles_dir }}'
+
+      {{ git_dotfiles_alias }} status
+    args:
+      chdir: "{{ git_dotfiles_dir }}"
+      executable: /bin/bash
+    register: git_dotfiles_alias_exec
+  - name: Assert that script executed
+    assert:
+      that: git_dotfiles_alias_exec.rc == 0
