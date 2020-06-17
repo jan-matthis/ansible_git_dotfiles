@@ -1,6 +1,6 @@
 galaxy_info:
   role_name: git_dotfiles
-  description: Install and update dotfiles using a bare Git repository
+  description: Manages dotfiles using a bare Git repository
   author: Jan-Matthis Lueckmann
   license: MIT
   min_ansible_version: 2.5

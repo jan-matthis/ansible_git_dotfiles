@@ -21,7 +21,7 @@
   shell: |
     # Alias
     shopt -s expand_aliases
-    alias {{ git_dotfiles_alias }}='git --git-dir={{ git_dotfiles_dir_dot_git }} --work-tree={{ git_dotfiles_dir }}'
+    {{ git_dotfiles_define_alias }}
     {{ git_dotfiles_alias }} config --local status.showUntrackedFiles no
 
     # Handle existing config
@@ -41,7 +41,7 @@
   shell: |
     # Alias
     shopt -s expand_aliases
-    alias {{ git_dotfiles_alias }}='git --git-dir={{ git_dotfiles_dir_dot_git }} --work-tree={{ git_dotfiles_dir }}'
+    {{ git_dotfiles_define_alias }}
     {{ git_dotfiles_alias }} config --local status.showUntrackedFiles no
 
     # Update
@@ -57,6 +57,6 @@
     state: present
     create: yes
     block: |
-      alias {{ git_dotfiles_alias }}='git --git-dir={{ git_dotfiles_dir_dot_git }} --work-tree={{ git_dotfiles_dir }}'
+      {{ git_dotfiles_define_alias }}
     marker: '# {mark} ANSIBLE MANAGED BLOCK jan_matthis.git_dotfiles'
   when: git_dotfiles_alias_file | length > 0

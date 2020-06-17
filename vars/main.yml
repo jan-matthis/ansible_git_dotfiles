@@ -1,1 +1,3 @@
 ---
+
+git_dotfiles_define_alias: "alias {{ git_dotfiles_alias }}='git --git-dir={{ git_dotfiles_dir_dot_git }} --work-tree={{ git_dotfiles_dir }}'"

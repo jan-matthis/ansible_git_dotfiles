@@ -1,6 +1,6 @@
 # Git dotfiles
 
-Ansible role to install and update dotfiles using a bare Git repository.
+Ansible role to manage dotfiles using a bare Git repository.
 
 Automatises the technique described in [The best way to store your dotfiles: A bare Git repository](https://www.atlassian.com/git/tutorials/dotfiles).
 
