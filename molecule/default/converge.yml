@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include jan_matthis.git_dotfiles"
+      include_role:
+        name: "jan_matthis.git_dotfiles"

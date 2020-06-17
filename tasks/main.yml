@@ -1,0 +1,62 @@
+---
+
+- name: Ensure git is installed
+  package: name=git state=present
+  become: true
+
+- name: Check for repository
+  stat:
+    path: "{{ git_dotfiles_dir_dot_git }}HEAD"
+  register: git_dotfiles_head
+  changed_when: false
+
+- name: Clone repository
+  git:
+    repo: "{{ git_dotfiles_repo }}"
+    dest: "{{ git_dotfiles_dir_dot_git }}"
+    bare: true
+  when: not git_dotfiles_head.stat.exists
+
+- name: Install dotfiles
+  shell: |
+    # Alias
+    shopt -s expand_aliases
+    alias {{ git_dotfiles_alias }}='git --git-dir={{ git_dotfiles_dir_dot_git }} --work-tree={{ git_dotfiles_dir }}'
+    {{ git_dotfiles_alias }} config --local status.showUntrackedFiles no
+
+    # Handle existing config
+    mkdir -p {{ git_dotfiles_dir_backup }}
+    {{ git_dotfiles_alias }} checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} dirname {} | awk {'print $1'} | xargs -I{} mkdir -p {{ git_dotfiles_dir_backup }}/{}
+    {{ git_dotfiles_alias }} checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} {{ git_dotfiles_dir_backup }}/{}
+    
+    # Install
+    {{ git_dotfiles_alias }} checkout
+  args:
+    chdir: "{{ git_dotfiles_dir }}"
+    creates: "{{ git_dotfiles_dir_dot_git }}"
+    executable: /bin/bash
+  when: not git_dotfiles_head.stat.exists
+
+- name: Update dotfiles
+  shell: |
+    # Alias
+    shopt -s expand_aliases
+    alias {{ git_dotfiles_alias }}='git --git-dir={{ git_dotfiles_dir_dot_git }} --work-tree={{ git_dotfiles_dir }}'
+    {{ git_dotfiles_alias }} config --local status.showUntrackedFiles no
+
+    # Update
+    {{ git_dotfiles_alias }} pull
+  args:
+    chdir: "{{ git_dotfiles_dir }}"
+    executable: /bin/bash
+  when: git_dotfiles_head.stat.exists
+
+- name: Append aliases file
+  blockinfile:
+    path: "{{ git_dotfiles_alias_file }}"
+    state: present
+    create: yes
+    block: |
+      alias {{ git_dotfiles_alias }}='git --git-dir={{ git_dotfiles_dir_dot_git }} --work-tree={{ git_dotfiles_dir }}'
+    marker: '# {mark} ANSIBLE MANAGED BLOCK jan_matthis.git_dotfiles'
+  when: git_dotfiles_alias_file | length > 0
